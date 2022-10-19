@@ -22,9 +22,14 @@ function App() {
     temp_max: number;
   }
 
-  const [city, setCity] = useState([]);
-  const [options, setOptions] = useState([]);
-  const [current_weather, setCurrent_weather] = useState<currentWeather>(null);
+  interface option{
+    value: string,
+    label: string,
+  }
+
+  const [city, setCity] = useState<string>();
+  const [options, setOptions] = useState<option[]>([]);
+  const [current_weather, setCurrent_weather] = useState<currentWeather>();
   const [forecast_weather, setForecast_weather] = useState<forecastWeather[]>(
     []
   );
@@ -52,7 +57,7 @@ function App() {
     axios
       .get("../cities-fr.json")
       .then(function (response) {
-        let data = [];
+        let data : option[] = [];
         response.data.forEach((d: any) => {
           data.push({ value: d.id, label: d.nm });
         });
@@ -66,7 +71,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (Object.keys(city).length > 0) {
+    if (city) {
       setIsLoading(true);
       axios
         .all([
