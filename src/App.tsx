@@ -30,6 +30,24 @@ function App() {
   );
   const [isLoading, setIsLoading] = useState(false);
 
+  const capitalizeFirstLetter = (string:string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  const nth = (d: number) => {
+    if (d > 3 && d < 21) return "th";
+    switch (d % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
   useEffect(() => {
     axios
       .get("../cities-fr.json")
@@ -68,7 +86,7 @@ function App() {
                 main: currentRes.data.weather[0].main,
                 temp_max: currentRes.data.main.temp_max,
                 feels_like: currentRes.data.main.feels_like,
-                description: currentRes.data.weather[0].description,
+                description: capitalizeFirstLetter(currentRes.data.weather[0].description),
               };
               setCurrent_weather(currentR);
             }
@@ -81,8 +99,8 @@ function App() {
                   day: date.format("ddd"),
                   date: date.date(),
                   id: forecastResI.weather[0].id,
-                  main: forecastResI.weather[0].id,
-                  description: forecastResI.weather[0].description,
+                  main: forecastResI.weather[0].main,
+                  description: capitalizeFirstLetter(forecastResI.weather[0].description),
                   temp_max: forecastResI.temp.max,
                 };
                 forecastArr.push(forecastR);
@@ -101,7 +119,7 @@ function App() {
     }
   }, [city]);
 
-  const handleOnChange = (e) => {
+  const handleOnChange = (e:any) => {
     setCity(e.label);
   };
 
@@ -156,7 +174,7 @@ function App() {
                               <div className="col-4" key={key}>
                                 <div className="col-12">
                                   <h4>
-                                    {forecastWeather.day} {forecastWeather.date}
+                                    {forecastWeather.day} {forecastWeather.date}<sup>{nth(forecastWeather.date)}</sup>
                                     <sup></sup>
                                   </h4>
                                 </div>
